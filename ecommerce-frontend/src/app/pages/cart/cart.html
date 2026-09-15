@@ -1,0 +1,155 @@
+<div class="min-h-screen bg-gray-100 p-8">
+
+  <div class="max-w-6xl mx-auto">
+
+    <h1 class="text-4xl font-bold mb-8">
+      Shopping Cart
+    </h1>
+
+    @if (loading) {
+
+      <p class="text-center text-gray-600">
+        Loading cart...
+      </p>
+
+    } @else if (errorMessage) {
+
+      <div class="bg-red-100 text-red-700 p-4 rounded-lg">
+        {{ errorMessage }}
+      </div>
+
+    } @else if (cartProducts.length === 0) {
+
+      <div class="bg-white rounded-xl p-10 text-center shadow">
+
+        <h2 class="text-2xl font-semibold">
+          Your cart is empty
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Add some products to your cart.
+        </p>
+
+        <a
+          routerLink="/products"
+          class="inline-block mt-6 bg-black text-white px-6 py-3 rounded-lg">
+          Browse Products
+        </a>
+
+      </div>
+
+    } @else {
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Cart Items -->
+
+        <div class="lg:col-span-2 space-y-4">
+
+          @for (item of cartProducts; track item.cartItem.id) {
+
+            <div class="bg-white rounded-xl shadow p-5">
+
+              <div class="flex gap-5">
+
+                <img
+                  [src]="item.product.imageUrl"
+                  [alt]="item.product.name"
+                  class="w-28 h-28 object-cover rounded-lg"
+                />
+
+                <div class="flex-1">
+
+                  <h2 class="text-xl font-bold">
+                    {{ item.product.name }}
+                  </h2>
+
+                  <p class="text-gray-500">
+                    {{ item.product.category }}
+                  </p>
+
+                  <p class="text-lg font-semibold mt-2">
+                    ₹{{ item.product.price }}
+                  </p>
+
+                  <div class="flex items-center gap-3 mt-4">
+
+                    <button
+                      (click)="decreaseQuantity(item)"
+                      class="px-3 py-1 bg-gray-200 rounded">
+                      −
+                    </button>
+
+                    <span class="font-semibold">
+                      {{ item.cartItem.quantity }}
+                    </span>
+
+                    <button
+                      (click)="increaseQuantity(item)"
+                      [disabled]="item.cartItem.quantity >= item.product.stock"
+                      class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
+                      +
+                    </button>
+
+                    <button
+                      (click)="removeItem(item)"
+                      class="ml-4 text-red-600">
+                      Remove
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <div class="font-bold">
+                  ₹{{ getSubtotal(item) }}
+                </div>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+        <!-- Summary -->
+
+        <div class="bg-white rounded-xl shadow p-6 h-fit">
+
+          <h2 class="text-2xl font-bold mb-5">
+            Order Summary
+          </h2>
+
+          <div class="flex justify-between mb-3">
+            <span>Subtotal</span>
+            <span>₹{{ getTotal() }}</span>
+          </div>
+
+          <div class="flex justify-between mb-5">
+            <span>Shipping</span>
+            <span>FREE</span>
+          </div>
+
+          <hr class="mb-5">
+
+          <div class="flex justify-between text-xl font-bold">
+            <span>Total</span>
+            <span>₹{{ getTotal() }}</span>
+          </div>
+
+          <a
+            routerLink="/checkout"
+            class="block text-center bg-black text-white py-3 rounded-lg mt-6">
+            Proceed to Checkout
+          </a>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

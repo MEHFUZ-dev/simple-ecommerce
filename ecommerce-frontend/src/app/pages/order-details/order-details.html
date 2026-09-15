@@ -1,0 +1,142 @@
+<div class="min-h-screen bg-gray-100 p-8">
+
+    <div class="max-w-4xl mx-auto">
+
+        <a routerLink="/orders" class="text-gray-600 hover:text-black">
+            ← Back to Orders
+        </a>
+
+        @if (loading) {
+
+        <p class="text-center mt-8">
+            Loading order...
+        </p>
+
+        } @else if (errorMessage) {
+
+        <p class="text-center text-red-600 mt-8">
+            {{ errorMessage }}
+        </p>
+
+        } @else if (order) {
+
+        <div class="bg-white rounded-xl shadow p-6 mt-6">
+
+            <div class="flex justify-between items-center">
+
+                <div>
+
+                    <h1 class="text-3xl font-bold">
+                        Order #{{ order.id }}
+                    </h1>
+
+                    <p class="text-gray-500 mt-2">
+                        {{ order.createdAt | date:'medium' }}
+                    </p>
+
+                </div>
+
+                <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">
+                    {{ getStatusText(order.status) }}
+                </span>
+
+                @if (order.status !== 'CANCELLED') {
+
+                <div class="mt-8">
+
+                    <div class="flex justify-between text-sm">
+
+                        <span [class.font-bold]="order.status === 'PLACED'">
+                            Placed
+                        </span>
+
+                        <span [class.font-bold]="order.status === 'PROCESSING'">
+                            Processing
+                        </span>
+
+                        <span [class.font-bold]="order.status === 'SHIPPED'">
+                            Shipped
+                        </span>
+
+                        <span [class.font-bold]="order.status === 'DELIVERED'">
+                            Delivered
+                        </span>
+
+                    </div>
+
+                    <div class="w-full bg-gray-200 h-2 rounded-full mt-3">
+
+                        <div class="bg-black h-2 rounded-full" [class.w-1\/4]="order.status === 'PLACED'"
+                            [class.w-2\/4]="order.status === 'PROCESSING'" [class.w-3\/4]="order.status === 'SHIPPED'"
+                            [class.w-full]="order.status === 'DELIVERED'">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                }
+
+                @if (order.status === 'CANCELLED') {
+
+                <div class="mt-6 bg-red-100 text-red-700 p-4 rounded-lg">
+
+                    This order has been cancelled.
+
+                </div>
+
+                }
+
+            </div>
+
+            <hr class="my-6">
+
+            <h2 class="text-2xl font-bold mb-4">
+                Items
+            </h2>
+
+            <div class="space-y-4">
+
+                @for (item of items; track item.id) {
+
+                <div class="flex justify-between border-b pb-4">
+
+                    <div>
+
+                        <p class="font-semibold">
+                            {{ item.productName }}
+                        </p>
+
+                        <p class="text-gray-500">
+                            ₹{{ item.price }} × {{ item.quantity }}
+                        </p>
+
+                    </div>
+
+                    <p class="font-semibold">
+                        ₹{{ item.price * item.quantity }}
+                    </p>
+
+                </div>
+
+                }
+
+            </div>
+
+            <div class="flex justify-between text-2xl font-bold mt-6">
+
+                <span>Total</span>
+
+                <span>
+                    ₹{{ order.totalAmount }}
+                </span>
+
+            </div>
+
+        </div>
+
+        }
+
+    </div>
+
+</div>

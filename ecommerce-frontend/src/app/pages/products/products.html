@@ -1,0 +1,243 @@
+<div class="min-h-screen bg-gray-100 p-8">
+
+  <div class="max-w-7xl mx-auto">
+
+    <h1 class="text-4xl font-bold text-center mb-8">
+      Products
+    </h1>
+
+    <!-- Search and Filters -->
+
+    <div class="bg-white rounded-xl shadow p-5 mb-8">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <!-- Search -->
+
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Search
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (input)="onSearch()"
+            placeholder="Search products..."
+            class="w-full border rounded-lg px-4 py-2"
+          />
+
+        </div>
+
+        <!-- Category -->
+
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Category
+          </label>
+
+          <select
+            [(ngModel)]="selectedCategory"
+            (change)="onCategoryChange()"
+            class="w-full border rounded-lg px-4 py-2">
+
+            @for (category of categories; track category) {
+
+              <option [value]="category">
+                {{ category }}
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+        <!-- Sort -->
+
+        <div>
+
+          <label class="block text-sm font-semibold mb-2">
+            Sort By
+          </label>
+
+          <select
+            [(ngModel)]="sortOption"
+            (change)="onSortChange()"
+            class="w-full border rounded-lg px-4 py-2">
+
+            <option value="default">
+              Default
+            </option>
+
+            <option value="price-low">
+              Price: Low to High
+            </option>
+
+            <option value="price-high">
+              Price: High to Low
+            </option>
+
+            <option value="name">
+              Name: A to Z
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+      <button
+        (click)="clearFilters()"
+        class="mt-4 text-sm text-gray-600 hover:text-black underline">
+
+        Clear Filters
+
+      </button>
+
+    </div>
+
+    @if (loading) {
+
+      <p class="text-center text-gray-600">
+        Loading products...
+      </p>
+
+    } @else if (errorMessage) {
+
+      <p
+        class="text-center text-red-600"
+        role="alert">
+
+        {{ errorMessage }}
+
+      </p>
+
+    } @else if (filteredProducts.length === 0) {
+
+      <div class="bg-white rounded-xl shadow p-10 text-center">
+
+        <h2 class="text-2xl font-semibold">
+          No products found
+        </h2>
+
+        <p class="text-gray-500 mt-2">
+          Try changing your search or filters.
+        </p>
+
+        <button
+          (click)="clearFilters()"
+          class="mt-5 bg-black text-white px-5 py-2 rounded-lg">
+
+          Clear Filters
+
+        </button>
+
+      </div>
+
+    } @else {
+
+      <p class="text-gray-600 mb-4">
+        Showing {{ filteredProducts.length }}
+        product(s)
+      </p>
+
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        @for (
+          product of filteredProducts;
+          track product.id
+        ) {
+
+          <div
+            class="bg-white rounded-xl shadow-md overflow-hidden">
+
+            <a
+              [routerLink]="[
+                '/products',
+                product.id
+              ]">
+
+              <img
+                [src]="product.imageUrl"
+                [alt]="product.name"
+                (error)="onImageError($event)"
+                class="w-full h-48 object-cover"
+              />
+
+            </a>
+
+            <div class="p-5">
+
+              <p class="text-sm text-gray-500">
+                {{ product.category }}
+              </p>
+
+              <a
+                [routerLink]="[
+                  '/products',
+                  product.id
+                ]"
+                class="text-xl font-bold mt-1 block hover:underline">
+
+                {{ product.name }}
+
+              </a>
+
+              <p class="text-gray-600 mt-2">
+                {{ product.description }}
+              </p>
+
+              <div
+                class="flex justify-between items-center mt-4">
+
+                <span class="text-xl font-bold">
+                  ₹{{ product.price }}
+                </span>
+
+                @if (product.stock > 0) {
+
+                  <span class="text-sm text-green-600">
+                    In Stock
+                  </span>
+
+                } @else {
+
+                  <span class="text-sm text-red-600">
+                    Out of Stock
+                  </span>
+
+                }
+
+              </div>
+
+              <button
+                (click)="addToCart(product)"
+                [disabled]="product.stock <= 0"
+                class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed">
+
+                {{
+                  product.stock > 0
+                    ? 'Add to Cart'
+                    : 'Out of Stock'
+                }}
+
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
+
+  </div>
+
+</div>
