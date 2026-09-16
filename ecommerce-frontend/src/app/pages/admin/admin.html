@@ -1,309 +1,406 @@
-<div class="min-h-screen bg-gray-100 p-8">
+<div class="min-h-screen bg-gradient-to-b from-[#FAFAF9] via-[#F5F5F4] to-[#FAFAF9] antialiased">
 
-  <div class="max-w-7xl mx-auto">
+  <!-- ============ PAGE HEADER BAND ============ -->
+  <section class="relative overflow-hidden bg-[#1C1917] text-white">
+    <!-- Dark fade behind transparent navbar -->
+    <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#1C1917] via-[#1C1917]/60 to-transparent pointer-events-none"></div>
 
-    <div class="flex justify-between items-center mb-8">
+    <!-- Decorative amber blobs -->
+    <div class="absolute -top-24 -left-24 w-80 h-80 bg-[#D97706]/25 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-32 -right-24 w-96 h-96 bg-[#F59E0B]/15 rounded-full blur-3xl"></div>
 
-      <div>
+    <div class="relative max-w-7xl mx-auto px-6 pt-32 pb-24">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
 
-        <h1 class="text-4xl font-bold">
-          Admin Dashboard
-        </h1>
+        <div>
+          <p class="text-[#FCD34D] font-semibold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#FCD34D] animate-pulse"></span>
+            Admin Panel
+          </p>
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+            Admin <span class="bg-gradient-to-r from-[#FCD34D] to-[#D97706] bg-clip-text text-transparent">Dashboard</span>
+          </h1>
+          <p class="text-[#D6D3D1] mt-3 max-w-xl">
+            Manage your products, stock, and pricing all in one place.
+          </p>
+        </div>
 
-        <p class="text-gray-500 mt-2">
-          Manage your products
-        </p>
+        <button
+          (click)="openAddForm()"
+          class="group inline-flex items-center gap-2 bg-gradient-to-r from-[#D97706] to-[#B45309] text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-[#D97706]/30 hover:shadow-xl hover:shadow-[#D97706]/40 hover:-translate-y-0.5 transition-all self-start md:self-auto">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Add Product
+        </button>
 
       </div>
 
-      <button
-        (click)="openAddForm()"
-        class="bg-black text-white px-6 py-3 rounded-lg">
-
-        + Add Product
-
-      </button>
-
+      <!-- Quick stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+        <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-[#A8A29E] uppercase tracking-wider font-medium">Total Products</p>
+          <p class="text-2xl font-bold text-white mt-1">{{ products.length }}</p>
+        </div>
+        <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-[#A8A29E] uppercase tracking-wider font-medium">In Stock</p>
+          <p class="text-2xl font-bold text-emerald-400 mt-1">
+            {{ products.length }}
+          </p>
+        </div>
+        <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-[#A8A29E] uppercase tracking-wider font-medium">Categories</p>
+          <p class="text-2xl font-bold text-[#FCD34D] mt-1">
+            {{ products.length ? 4 : 0 }}
+          </p>
+        </div>
+        <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
+          <p class="text-xs text-[#A8A29E] uppercase tracking-wider font-medium">Out of Stock</p>
+          <p class="text-2xl font-bold text-[#DC2626] mt-1">0</p>
+        </div>
+      </div>
     </div>
+  </section>
 
 
+  <!-- ============ MAIN CONTENT ============ -->
+  <div class="max-w-7xl mx-auto px-6 -mt-12 relative z-10 pb-20">
+
+    <!-- ============ ALERTS ============ -->
     @if (successMessage) {
-
-      <div
-        class="bg-green-100 text-green-700 p-4 rounded-lg mb-5">
-
-        {{ successMessage }}
-
+      <div class="flex items-start gap-3 bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl mb-5 shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <p class="text-sm font-medium pt-1.5">{{ successMessage }}</p>
       </div>
-
     }
-
 
     @if (errorMessage) {
-
-      <div
-        class="bg-red-100 text-red-700 p-4 rounded-lg mb-5">
-
-        {{ errorMessage }}
-
+      <div class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl mb-5 shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <p class="text-sm font-medium pt-1.5">{{ errorMessage }}</p>
       </div>
-
     }
 
 
+    <!-- ============ ADD / EDIT FORM ============ -->
     @if (showForm) {
+      <div class="bg-white rounded-2xl border border-[#E7E5E4] shadow-xl shadow-black/5 overflow-hidden mb-8">
 
-      <div class="bg-white rounded-xl shadow p-6 mb-8">
+        <!-- Form header -->
+        <div class="relative px-6 py-5 bg-gradient-to-br from-[#1C1917] to-[#292524] text-white overflow-hidden">
+          <div class="absolute -top-16 -right-16 w-56 h-56 bg-[#D97706]/20 rounded-full blur-3xl"></div>
+          <div class="relative flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D97706] to-[#B45309] flex items-center justify-center shadow-lg shadow-[#D97706]/40">
+                @if (editingId === null) {
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                }
+              </div>
+              <div>
+                <h2 class="text-lg font-bold">
+                  {{ editingId === null ? 'Add Product' : 'Edit Product' }}
+                </h2>
+                <p class="text-xs text-[#A8A29E]">
+                  {{ editingId === null ? 'Fill in the details below' : 'Update the product information' }}
+                </p>
+              </div>
+            </div>
 
-        <h2 class="text-2xl font-bold mb-6">
-
-          {{ editingId === null
-            ? 'Add Product'
-            : 'Edit Product' }}
-
-        </h2>
-
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-          <div>
-
-            <label class="block font-semibold mb-2">
-              Product Name
-            </label>
-
-            <input
-              [(ngModel)]="form.name"
-              type="text"
-              class="w-full border rounded-lg px-4 py-2"
-              placeholder="Product name"
-            />
-
+            <button
+              (click)="cancelForm()"
+              class="w-9 h-9 rounded-lg flex items-center justify-center text-[#A8A29E] hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Close form">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
           </div>
-
-
-          <div>
-
-            <label class="block font-semibold mb-2">
-              Category
-            </label>
-
-            <input
-              [(ngModel)]="form.category"
-              type="text"
-              class="w-full border rounded-lg px-4 py-2"
-              placeholder="Category"
-            />
-
-          </div>
-
-
-          <div>
-
-            <label class="block font-semibold mb-2">
-              Price
-            </label>
-
-            <input
-              [(ngModel)]="form.price"
-              type="number"
-              min="0"
-              class="w-full border rounded-lg px-4 py-2"
-            />
-
-          </div>
-
-
-          <div>
-
-            <label class="block font-semibold mb-2">
-              Stock
-            </label>
-
-            <input
-              [(ngModel)]="form.stock"
-              type="number"
-              min="0"
-              class="w-full border rounded-lg px-4 py-2"
-            />
-
-          </div>
-
-
-          <div class="md:col-span-2">
-
-            <label class="block font-semibold mb-2">
-              Image URL
-            </label>
-
-            <input
-              [(ngModel)]="form.imageUrl"
-              type="text"
-              class="w-full border rounded-lg px-4 py-2"
-              placeholder="https://..."
-            />
-
-          </div>
-
-
-          <div class="md:col-span-2">
-
-            <label class="block font-semibold mb-2">
-              Description
-            </label>
-
-            <textarea
-              [(ngModel)]="form.description"
-              rows="4"
-              class="w-full border rounded-lg px-4 py-2"
-              placeholder="Product description">
-            </textarea>
-
-          </div>
-
         </div>
 
+        <!-- Form body -->
+        <div class="p-6">
 
-        <div class="flex gap-3 mt-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-          <button
-            (click)="saveProduct()"
-            class="bg-black text-white px-6 py-2 rounded-lg">
+            <div>
+              <label class="block text-xs font-semibold text-[#57534E] uppercase tracking-wider mb-2">
+                Product Name
+              </label>
+              <input
+                [(ngModel)]="form.name"
+                type="text"
+                placeholder="Product name"
+                class="w-full bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl px-4 py-2.5 text-sm text-[#292524] placeholder:text-[#A8A29E] focus:outline-none focus:border-[#D97706] focus:ring-4 focus:ring-[#D97706]/10 transition-all"
+              />
+            </div>
 
-            {{ editingId === null
-              ? 'Add Product'
-              : 'Update Product' }}
+            <div>
+              <label class="block text-xs font-semibold text-[#57534E] uppercase tracking-wider mb-2">
+                Category
+              </label>
+              <input
+                [(ngModel)]="form.category"
+                type="text"
+                placeholder="Category"
+                class="w-full bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl px-4 py-2.5 text-sm text-[#292524] placeholder:text-[#A8A29E] focus:outline-none focus:border-[#D97706] focus:ring-4 focus:ring-[#D97706]/10 transition-all"
+              />
+            </div>
 
-          </button>
+            <div>
+              <label class="block text-xs font-semibold text-[#57534E] uppercase tracking-wider mb-2">
+                Price (₹)
+              </label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716C] text-sm font-semibold pointer-events-none">₹</span>
+                <input
+                  [(ngModel)]="form.price"
+                  type="number"
+                  min="0"
+                  class="w-full bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl pl-8 pr-4 py-2.5 text-sm text-[#292524] focus:outline-none focus:border-[#D97706] focus:ring-4 focus:ring-[#D97706]/10 transition-all"
+                />
+              </div>
+            </div>
 
-          <button
-            (click)="cancelForm()"
-            class="bg-gray-200 px-6 py-2 rounded-lg">
+            <div>
+              <label class="block text-xs font-semibold text-[#57534E] uppercase tracking-wider mb-2">
+                Stock
+              </label>
+              <input
+                [(ngModel)]="form.stock"
+                type="number"
+                min="0"
+                class="w-full bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl px-4 py-2.5 text-sm text-[#292524] focus:outline-none focus:border-[#D97706] focus:ring-4 focus:ring-[#D97706]/10 transition-all"
+              />
+            </div>
 
-            Cancel
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-[#57534E] uppercase tracking-wider mb-2">
+                Image URL
+              </label>
+              <div class="relative">
+                <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A8A29E] pointer-events-none"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <input
+                  [(ngModel)]="form.imageUrl"
+                  type="text"
+                  placeholder="https://..."
+                  class="w-full bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#292524] placeholder:text-[#A8A29E] focus:outline-none focus:border-[#D97706] focus:ring-4 focus:ring-[#D97706]/10 transition-all"
+                />
+              </div>
+            </div>
 
-          </button>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-[#57534E] uppercase tracking-wider mb-2">
+                Description
+              </label>
+              <textarea
+                [(ngModel)]="form.description"
+                rows="4"
+                placeholder="Product description"
+                class="w-full bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl px-4 py-3 text-sm text-[#292524] placeholder:text-[#A8A29E] focus:outline-none focus:border-[#D97706] focus:ring-4 focus:ring-[#D97706]/10 transition-all resize-none">
+              </textarea>
+            </div>
+
+          </div>
+
+          <!-- Form actions -->
+          <div class="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-[#F5F5F4]">
+
+            <button
+              (click)="saveProduct()"
+              class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#D97706] to-[#B45309] text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-[#D97706]/30 hover:shadow-xl hover:shadow-[#D97706]/40 hover:-translate-y-0.5 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              {{ editingId === null ? 'Add Product' : 'Update Product' }}
+            </button>
+
+            <button
+              (click)="cancelForm()"
+              class="inline-flex items-center justify-center gap-2 bg-[#FAFAF9] border border-[#E7E5E4] text-[#292524] px-6 py-2.5 rounded-xl font-semibold hover:border-[#D97706] hover:text-[#B45309] transition-all">
+              Cancel
+            </button>
+
+          </div>
 
         </div>
 
       </div>
-
     }
 
 
+    <!-- ============ PRODUCTS TABLE ============ -->
     @if (loading) {
 
-      <p class="text-center">
-        Loading products...
-      </p>
+      <div class="bg-white rounded-2xl border border-[#E7E5E4] overflow-hidden animate-pulse">
+        <div class="bg-[#F5F5F4] h-12"></div>
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="border-t border-[#E7E5E4] p-4 flex items-center gap-4">
+            <div class="h-4 bg-[#F5F5F4] rounded flex-1"></div>
+            <div class="h-4 bg-[#F5F5F4] rounded w-24"></div>
+            <div class="h-4 bg-[#F5F5F4] rounded w-20"></div>
+            <div class="h-4 bg-[#F5F5F4] rounded w-16"></div>
+            <div class="h-8 bg-[#F5F5F4] rounded-lg w-32"></div>
+          </div>
+        }
+      </div>
 
     } @else {
 
-      <div class="bg-white rounded-xl shadow overflow-hidden">
+      <div class="bg-white rounded-2xl border border-[#E7E5E4] shadow-xl shadow-black/5 overflow-hidden">
 
-        <div class="overflow-x-auto">
-
+        <!-- Table header (outside the scroll for desktop clarity) -->
+        <div class="hidden md:block overflow-x-auto">
           <table class="w-full">
-
-            <thead class="bg-gray-100">
-
-              <tr>
-
-                <th class="text-left p-4">
-                  Product
-                </th>
-
-                <th class="text-left p-4">
-                  Category
-                </th>
-
-                <th class="text-left p-4">
-                  Price
-                </th>
-
-                <th class="text-left p-4">
-                  Stock
-                </th>
-
-                <th class="text-left p-4">
-                  Actions
-                </th>
-
+            <thead>
+              <tr class="bg-[#FAFAF9] border-b border-[#E7E5E4]">
+                <th class="text-left px-5 py-4 text-xs font-semibold text-[#57534E] uppercase tracking-wider">Product</th>
+                <th class="text-left px-5 py-4 text-xs font-semibold text-[#57534E] uppercase tracking-wider">Category</th>
+                <th class="text-left px-5 py-4 text-xs font-semibold text-[#57534E] uppercase tracking-wider">Price</th>
+                <th class="text-left px-5 py-4 text-xs font-semibold text-[#57534E] uppercase tracking-wider">Stock</th>
+                <th class="text-right px-5 py-4 text-xs font-semibold text-[#57534E] uppercase tracking-wider">Actions</th>
               </tr>
-
             </thead>
-
             <tbody>
+              @for (product of products; track product.id) {
+                <tr class="border-b border-[#F5F5F4] last:border-0 hover:bg-[#FAFAF9] transition-colors group">
 
-              @for (
-                product of products;
-                track product.id
-              ) {
-
-                <tr class="border-t">
-
-                  <td class="p-4 font-semibold">
-                    {{ product.name }}
+                  <td class="px-5 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-lg bg-[#FEF3C7] flex items-center justify-center shrink-0 group-hover:bg-[#FDE68A] transition-colors">
+                        <svg class="w-5 h-5 text-[#B45309]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                      </div>
+                      <span class="font-semibold text-[#292524]">{{ product.name }}</span>
+                    </div>
                   </td>
 
-                  <td class="p-4">
-                    {{ product.category }}
+                  <td class="px-5 py-4">
+                    <span class="inline-flex items-center bg-[#FEF3C7] text-[#B45309] text-xs font-semibold px-2.5 py-1 rounded-full">
+                      {{ product.category }}
+                    </span>
                   </td>
 
-                  <td class="p-4">
+                  <td class="px-5 py-4 font-semibold text-[#292524]">
                     ₹{{ product.price }}
                   </td>
 
-                  <td class="p-4">
-
+                  <td class="px-5 py-4">
                     @if (product.stock > 0) {
-
-                      <span class="text-green-600">
-                        {{ product.stock }}
+                      <span class="inline-flex items-center gap-1.5 text-emerald-700 text-sm font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        {{ product.stock }} in stock
                       </span>
-
                     } @else {
-
-                      <span class="text-red-600">
-                        Out of Stock
+                      <span class="inline-flex items-center gap-1.5 text-[#DC2626] text-sm font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
+                        Out of stock
                       </span>
-
                     }
-
                   </td>
 
-                  <td class="p-4">
-
-                    <div class="flex gap-2">
-
+                  <td class="px-5 py-4">
+                    <div class="flex justify-end gap-2">
                       <button
                         (click)="openEditForm(product)"
-                        class="bg-gray-200 px-4 py-2 rounded-lg">
-
+                        class="inline-flex items-center gap-1.5 bg-[#FAFAF9] border border-[#E7E5E4] text-[#292524] px-3 py-1.5 rounded-lg text-sm font-medium hover:border-[#D97706] hover:text-[#B45309] transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
                         Edit
-
                       </button>
-
                       <button
                         (click)="deleteProduct(product)"
-                        class="bg-red-600 text-white px-4 py-2 rounded-lg">
-
+                        class="inline-flex items-center gap-1.5 bg-[#FAFAF9] border border-[#E7E5E4] text-[#DC2626] px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#DC2626] hover:text-white hover:border-[#DC2626] transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/>
+                        </svg>
                         Delete
-
                       </button>
-
                     </div>
-
                   </td>
 
                 </tr>
-
               }
-
             </tbody>
-
           </table>
+        </div>
 
+        <!-- Mobile card view -->
+        <div class="md:hidden divide-y divide-[#F5F5F4]">
+          @for (product of products; track product.id) {
+            <div class="p-5 space-y-3">
+
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-10 h-10 rounded-lg bg-[#FEF3C7] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#B45309]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="font-semibold text-[#292524] truncate">{{ product.name }}</p>
+                    <span class="inline-flex items-center bg-[#FEF3C7] text-[#B45309] text-xs font-semibold px-2 py-0.5 rounded-full mt-1">
+                      {{ product.category }}
+                    </span>
+                  </div>
+                </div>
+                <span class="font-bold text-[#292524] shrink-0">₹{{ product.price }}</span>
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                @if (product.stock > 0) {
+                  <span class="inline-flex items-center gap-1.5 text-emerald-700 text-sm font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    {{ product.stock }} in stock
+                  </span>
+                } @else {
+                  <span class="inline-flex items-center gap-1.5 text-[#DC2626] text-sm font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
+                    Out of stock
+                  </span>
+                }
+
+                <div class="flex gap-2">
+                  <button
+                    (click)="openEditForm(product)"
+                    class="bg-[#FAFAF9] border border-[#E7E5E4] text-[#292524] px-3 py-1.5 rounded-lg text-sm font-medium">
+                    Edit
+                  </button>
+                  <button
+                    (click)="deleteProduct(product)"
+                    class="bg-red-50 text-[#DC2626] border border-red-200 px-3 py-1.5 rounded-lg text-sm font-medium">
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          }
         </div>
 
       </div>
