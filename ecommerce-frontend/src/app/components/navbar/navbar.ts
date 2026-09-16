@@ -29,19 +29,19 @@ export class Navbar implements OnInit {
   // 🔽 true only on the homepage (transparent navbar)
   isHomePage = false;
 
-constructor() {
-  this.router.events
-    .pipe(filter(e => e instanceof NavigationEnd))
-    .subscribe((e: NavigationEnd) => {
-      const url = e.urlAfterRedirects.split('?')[0].split('#')[0];
-      this.isHomePage = url === '/' || url === '';
-    });
-}
+  constructor() {
+    this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe((e: NavigationEnd) => {
+        const url = e.urlAfterRedirects.split('?')[0].split('#')[0];
+        this.isHomePage = url === '/' || url === '' || url === '/products';
+      });
+  }
 
   ngOnInit(): void {
     // Set initial state on first load
     const url = this.router.url.split('?')[0].split('#')[0];
-    this.isHomePage = url === '/' || url === '';
+    this.isHomePage = url === '/' || url === '' || url === '/products';
 
     if (this.authService.isLoggedIn()) {
       this.cartService.refreshCartCount();
