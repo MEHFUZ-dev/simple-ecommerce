@@ -11,7 +11,7 @@ export class CartService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/api/cart';
+  private apiUrl = 'https://simple-ecommerce-6x1d.onrender.com/api/cart';
 
   cartCount = signal(0);
 

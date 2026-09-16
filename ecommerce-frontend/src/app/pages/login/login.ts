@@ -29,26 +29,19 @@ export class Login {
       username: this.username,
       password: this.password
     }).subscribe({
+
       next: () => {
-  this.cartService.refreshCartCount();
 
-  if (this.authService.getRole() === 'ADMIN') {
-    this.router.navigate(['/products']);
-  } else {
-    this.router.navigate(['/products']);
-  }next: () => {
-  this.cartService.refreshCartCount();
+        this.cartService.refreshCartCount();
 
-  if (this.authService.getRole() === 'ADMIN') {
-    this.router.navigate(['/products']);
-  } else {
-    this.router.navigate(['/products']);
-  }
-}
-},
+        this.router.navigate(['/products']);
+      },
+
       error: () => {
+
         this.errorMessage = 'Invalid username or password';
       }
+
     });
   }
 }

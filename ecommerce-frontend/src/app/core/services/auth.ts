@@ -15,11 +15,15 @@ export class AuthService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'https://simple-ecommerce-6x1d.onrender.com/api/auth';
 
-  register(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, data);
-  }
+  register(data: any): Observable<string> {
+  return this.http.post(
+    `${this.apiUrl}/register`,
+    data,
+    { responseType: 'text' }
+  );
+}
 
   login(data: any): Observable<LoginResponse> {
     return this.http

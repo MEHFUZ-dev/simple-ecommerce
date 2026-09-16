@@ -20,22 +20,60 @@ export class Register {
 
   errorMessage = '';
 
-  register(): void {
-
+register(): void {
   this.errorMessage = '';
 
-  this.authService.register({
+  const userData = {
     username: this.username,
     email: this.email,
     password: this.password
-  }).subscribe({
-    next: () => {
-      this.router.navigate(['/products']);
+  };
+
+  console.log('1. Registering user...');
+
+  this.authService.register(userData).subscribe({
+
+    next: (response) => {
+
+      console.log('2. Registration successful:', response);
+      console.log('3. Trying automatic login...');
+
+      this.authService.login({
+        username: this.username,
+        password: this.password
+      }).subscribe({
+
+        next: (loginResponse) => {
+
+          console.log('4. Automatic login successful:', loginResponse);
+          console.log('5. Token:', localStorage.getItem('token'));
+
+          this.router.navigate(['/products']);
+
+        },
+
+        error: (error) => {
+
+          console.error('4. Automatic login FAILED:', error);
+
+          this.errorMessage =
+            'Registration successful, but automatic login failed';
+
+        }
+
+      });
+
     },
+
     error: (error) => {
+
+      console.error('Registration FAILED:', error);
+
       this.errorMessage =
         error.error || 'Registration failed';
+
     }
+
   });
 }
 }

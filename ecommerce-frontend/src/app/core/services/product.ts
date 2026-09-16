@@ -10,7 +10,7 @@ export class ProductService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/api/products';
+  private apiUrl = 'https://simple-ecommerce-6x1d.onrender.com/api/products';
 
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl);
@@ -19,6 +19,7 @@ export class ProductService {
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
+
   createProduct(product: Product): Observable<Product> {
     const { id, ...newProduct } = product;
 

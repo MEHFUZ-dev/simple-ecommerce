@@ -10,7 +10,7 @@ export class OrderService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8080/api/orders';
+  private apiUrl = 'https://simple-ecommerce-6x1d.onrender.com/api/orders';
 
   getOrders(): Observable<Order[]> {
     return this.http.get<Order[]>(this.apiUrl);
