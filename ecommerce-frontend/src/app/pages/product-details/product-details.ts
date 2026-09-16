@@ -55,7 +55,7 @@ export class ProductDetails implements OnInit {
 
           imageUrl:
             product.imageUrl ===
-            'https://via.placeholder.com/300'
+              'https://via.placeholder.com/300'
               ? this.localPlaceholderImage
               : product.imageUrl
         };
@@ -100,34 +100,67 @@ export class ProductDetails implements OnInit {
   }
 
   addToCart(): void {
-  if (!this.product) {
-    return;
-  }
 
-  if (this.product.stock <= 0) {
-    alert('Product is out of stock.');
-    return;
-  }
-
-  if (!this.authService.isLoggedIn()) {
-    alert('Please login to add products to cart.');
-    this.router.navigate(['/login']);
-    return;
-  }
-
-  this.cartService.addToCart(this.product.id, 1).subscribe({
-    next: () => {
-      alert(`${this.product!.name} added to cart!`);
-    },
-    error: (error) => {
-      console.error('Error adding product to cart:', error);
-      alert(
-        error.error?.message ||
-        'Unable to add product to cart.'
-      );
+    if (!this.product) {
+      return;
     }
-  });
-}
+
+    if (!this.authService.isLoggedIn()) {
+      alert('Please login to add products to cart.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (this.product.stock <= 0) {
+      alert('Product is out of stock.');
+      return;
+    }
+
+    if (this.quantity > this.product.stock) {
+      alert(`Only ${this.product.stock} item(s) available.`);
+      this.quantity = this.product.stock;
+      return;
+    }
+
+    this.cartService
+      .addToCart(this.product.id, this.quantity)
+      .subscribe({
+
+        next: () => {
+          alert(
+            `${this.quantity} × ${this.product!.name} added to cart!`
+          );
+
+          // Reset quantity after adding
+          this.quantity = 1;
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error adding product to cart:',
+            error
+          );
+
+          if (error.status === 401 || error.status === 403) {
+
+            alert('Please login to continue.');
+
+            this.authService.logout();
+
+            this.router.navigate(['/login']);
+
+            return;
+          }
+
+          alert(
+            error.error?.message ||
+            'Unable to add product to cart.'
+          );
+        }
+
+      });
+  }
 
   onImageError(event: Event): void {
 

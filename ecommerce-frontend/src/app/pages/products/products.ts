@@ -11,7 +11,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ProductService } from '../../core/services/product';
 import { CartService } from '../../core/services/cart';
-
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth';
 import { Product } from '../../models/product';
 
 @Component({
@@ -26,7 +27,8 @@ export class Products implements OnInit {
   private cartService = inject(CartService);
   private cdr = inject(ChangeDetectorRef);
   private route = inject(ActivatedRoute);
-
+  private router = inject(Router);
+private authService = inject(AuthService);
   private readonly localPlaceholderImage =
     '/product-placeholder.svg';
 
@@ -204,40 +206,61 @@ export class Products implements OnInit {
 
   addToCart(product: Product): void {
 
-    if (product.stock <= 0) {
+  if (!this.authService.isLoggedIn()) {
 
-      alert('Product is out of stock.');
+    alert('Please login to add products to cart.');
 
-      return;
-    }
+    this.router.navigate(['/login']);
 
-    this.cartService
-      .addToCart(product.id, 1)
-      .subscribe({
+    return;
+  }
 
-        next: () => {
+  if (product.stock <= 0) {
 
-          alert(
-            `${product.name} added to cart!`
-          );
+    alert('Product is out of stock.');
 
-        },
+    return;
+  }
 
-        error: (error) => {
+  this.cartService
+    .addToCart(product.id, 1)
+    .subscribe({
 
-          console.error(
-            'Error adding product to cart:',
-            error
-          );
+      next: () => {
 
-          alert(
-            'Unable to add product to cart.'
-          );
+        alert(`${product.name} added to cart!`);
 
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Error adding product to cart:',
+          error
+        );
+
+        if (
+          error.status === 401 ||
+          error.status === 403
+        ) {
+
+          this.authService.logout();
+
+          alert('Please login to continue.');
+
+          this.router.navigate(['/login']);
+
+          return;
         }
 
-      });
-  }
+        alert(
+          error.error?.message ||
+          'Unable to add product to cart.'
+        );
+      }
+
+    });
+}
 
   onImageError(event: Event): void {
 
