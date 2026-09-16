@@ -1,142 +1,284 @@
-<div class="min-h-screen bg-gray-100 p-8">
+<div class="min-h-screen bg-gradient-to-b from-[#FAFAF9] via-[#F5F5F4] to-[#FAFAF9] antialiased">
 
-    <div class="max-w-4xl mx-auto">
+  <!-- ============ PAGE HEADER BAND ============ -->
+  <section class="relative overflow-hidden bg-[#1C1917] text-white">
+    <!-- Dark fade behind transparent navbar -->
+    <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#1C1917] via-[#1C1917]/60 to-transparent pointer-events-none"></div>
 
-        <a routerLink="/orders" class="text-gray-600 hover:text-black">
-            ← Back to Orders
+    <!-- Decorative amber blobs -->
+    <div class="absolute -top-24 -left-24 w-80 h-80 bg-[#D97706]/25 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-32 -right-24 w-96 h-96 bg-[#F59E0B]/15 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-4xl mx-auto px-6 pt-32 pb-24">
+
+      <a routerLink="/orders"
+         class="inline-flex items-center gap-1.5 text-sm font-medium text-[#D6D3D1] hover:text-[#FCD34D] transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back to Orders
+      </a>
+
+      <div class="mt-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+
+        <div>
+          <p class="text-[#FCD34D] font-semibold text-sm uppercase tracking-widest mb-3">
+            Order Details
+          </p>
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+            Order <span class="bg-gradient-to-r from-[#FCD34D] to-[#D97706] bg-clip-text text-transparent">#{{ order?.id }}</span>
+          </h1>
+          @if (order) {
+            <p class="text-[#D6D3D1] mt-3 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              Placed on {{ order.createdAt | date:'medium' }}
+            </p>
+          }
+        </div>
+
+        @if (order) {
+          @switch (order.status) {
+            @case ('DELIVERED') {
+              <span class="inline-flex items-center gap-2 bg-emerald-500/15 text-emerald-300 text-sm font-semibold px-4 py-2 rounded-full border border-emerald-400/30 self-start md:self-auto">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                Delivered
+              </span>
+            }
+            @case ('SHIPPED') {
+              <span class="inline-flex items-center gap-2 bg-blue-500/15 text-blue-300 text-sm font-semibold px-4 py-2 rounded-full border border-blue-400/30 self-start md:self-auto">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                Shipped
+              </span>
+            }
+            @case ('PROCESSING') {
+              <span class="inline-flex items-center gap-2 bg-purple-500/15 text-purple-300 text-sm font-semibold px-4 py-2 rounded-full border border-purple-400/30 self-start md:self-auto">
+                <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                Processing
+              </span>
+            }
+            @case ('PLACED') {
+              <span class="inline-flex items-center gap-2 bg-[#FCD34D]/15 text-[#FCD34D] text-sm font-semibold px-4 py-2 rounded-full border border-[#FCD34D]/30 self-start md:self-auto">
+                <span class="w-2 h-2 rounded-full bg-[#FCD34D] animate-pulse"></span>
+                Placed
+              </span>
+            }
+            @case ('CANCELLED') {
+              <span class="inline-flex items-center gap-2 bg-red-500/15 text-red-300 text-sm font-semibold px-4 py-2 rounded-full border border-red-400/30 self-start md:self-auto">
+                <span class="w-2 h-2 rounded-full bg-red-400"></span>
+                Cancelled
+              </span>
+            }
+            @default {
+              <span class="inline-flex items-center gap-2 bg-white/10 text-[#D6D3D1] text-sm font-semibold px-4 py-2 rounded-full border border-white/20 self-start md:self-auto">
+                {{ getStatusText(order.status) }}
+              </span>
+            }
+          }
+        }
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <div class="max-w-4xl mx-auto px-6 -mt-16 relative z-10 pb-20">
+
+    @if (loading) {
+
+      <div class="bg-white rounded-2xl border border-[#E7E5E4] shadow-xl shadow-black/5 p-8 animate-pulse space-y-6">
+        <div class="h-5 bg-[#F5F5F4] rounded w-1/3"></div>
+        <div class="h-3 bg-[#F5F5F4] rounded w-1/4"></div>
+        <div class="h-14 bg-[#F5F5F4] rounded-xl"></div>
+        <div class="space-y-3">
+          <div class="h-4 bg-[#F5F5F4] rounded w-full"></div>
+          <div class="h-4 bg-[#F5F5F4] rounded w-5/6"></div>
+          <div class="h-4 bg-[#F5F5F4] rounded w-3/4"></div>
+        </div>
+      </div>
+
+    } @else if (errorMessage) {
+
+      <div class="bg-red-50 border border-red-200 rounded-2xl p-10 text-center max-w-lg mx-auto">
+        <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-7 h-7 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h2 class="text-xl font-bold text-[#292524] mb-1">Something went wrong</h2>
+        <p class="text-[#DC2626]">{{ errorMessage }}</p>
+        <a routerLink="/orders"
+           class="inline-flex items-center gap-2 mt-6 text-sm font-medium text-[#D97706] hover:text-[#B45309] transition-colors">
+          ← Back to Orders
         </a>
+      </div>
 
-        @if (loading) {
+    } @else if (order) {
 
-        <p class="text-center mt-8">
-            Loading order...
-        </p>
+      <div class="bg-white rounded-2xl border border-[#E7E5E4] shadow-xl shadow-black/5 overflow-hidden">
 
-        } @else if (errorMessage) {
+        <!-- ============ PROGRESS TRACKER ============ -->
+        @if (order.status !== 'CANCELLED') {
 
-        <p class="text-center text-red-600 mt-8">
-            {{ errorMessage }}
-        </p>
+          <div class="p-8 border-b border-[#F5F5F4]">
 
-        } @else if (order) {
-
-        <div class="bg-white rounded-xl shadow p-6 mt-6">
-
-            <div class="flex justify-between items-center">
-
-                <div>
-
-                    <h1 class="text-3xl font-bold">
-                        Order #{{ order.id }}
-                    </h1>
-
-                    <p class="text-gray-500 mt-2">
-                        {{ order.createdAt | date:'medium' }}
-                    </p>
-
-                </div>
-
-                <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">
-                    {{ getStatusText(order.status) }}
-                </span>
-
-                @if (order.status !== 'CANCELLED') {
-
-                <div class="mt-8">
-
-                    <div class="flex justify-between text-sm">
-
-                        <span [class.font-bold]="order.status === 'PLACED'">
-                            Placed
-                        </span>
-
-                        <span [class.font-bold]="order.status === 'PROCESSING'">
-                            Processing
-                        </span>
-
-                        <span [class.font-bold]="order.status === 'SHIPPED'">
-                            Shipped
-                        </span>
-
-                        <span [class.font-bold]="order.status === 'DELIVERED'">
-                            Delivered
-                        </span>
-
-                    </div>
-
-                    <div class="w-full bg-gray-200 h-2 rounded-full mt-3">
-
-                        <div class="bg-black h-2 rounded-full" [class.w-1\/4]="order.status === 'PLACED'"
-                            [class.w-2\/4]="order.status === 'PROCESSING'" [class.w-3\/4]="order.status === 'SHIPPED'"
-                            [class.w-full]="order.status === 'DELIVERED'">
-                        </div>
-
-                    </div>
-
-                </div>
-
-                }
-
-                @if (order.status === 'CANCELLED') {
-
-                <div class="mt-6 bg-red-100 text-red-700 p-4 rounded-lg">
-
-                    This order has been cancelled.
-
-                </div>
-
-                }
-
-            </div>
-
-            <hr class="my-6">
-
-            <h2 class="text-2xl font-bold mb-4">
-                Items
+            <h2 class="text-xs font-semibold text-[#78716C] uppercase tracking-widest mb-6">
+              Order Progress
             </h2>
 
-            <div class="space-y-4">
+            <!-- Step labels -->
+            <div class="flex justify-between text-xs sm:text-sm mb-3">
 
-                @for (item of items; track item.id) {
+              <span [class]="isStepActive('PLACED') || isStepDone('PLACED')
+                ? 'font-bold text-[#B45309]'
+                : 'font-medium text-[#A8A29E]'">
+                Placed
+              </span>
 
-                <div class="flex justify-between border-b pb-4">
+              <span [class]="isStepActive('PROCESSING') || isStepDone('PROCESSING')
+                ? 'font-bold text-[#B45309]'
+                : 'font-medium text-[#A8A29E]'">
+                Processing
+              </span>
 
-                    <div>
+              <span [class]="isStepActive('SHIPPED') || isStepDone('SHIPPED')
+                ? 'font-bold text-[#B45309]'
+                : 'font-medium text-[#A8A29E]'">
+                Shipped
+              </span>
 
-                        <p class="font-semibold">
-                            {{ item.productName }}
-                        </p>
-
-                        <p class="text-gray-500">
-                            ₹{{ item.price }} × {{ item.quantity }}
-                        </p>
-
-                    </div>
-
-                    <p class="font-semibold">
-                        ₹{{ item.price * item.quantity }}
-                    </p>
-
-                </div>
-
-                }
+              <span [class]="isStepActive('DELIVERED') || isStepDone('DELIVERED')
+                ? 'font-bold text-[#B45309]'
+                : 'font-medium text-[#A8A29E]'">
+                Delivered
+              </span>
 
             </div>
 
-            <div class="flex justify-between text-2xl font-bold mt-6">
+            <!-- Progress bar -->
+            <div class="relative w-full bg-[#F5F5F4] h-2.5 rounded-full overflow-hidden">
 
-                <span>Total</span>
+              <div class="bg-gradient-to-r from-[#D97706] to-[#B45309] h-full rounded-full transition-all duration-500 ease-out shadow-sm shadow-[#D97706]/30"
+                   [class.w-1\/4]="order.status === 'PLACED'"
+                   [class.w-2\/4]="order.status === 'PROCESSING'"
+                   [class.w-3\/4]="order.status === 'SHIPPED'"
+                   [class.w-full]="order.status === 'DELIVERED'">
+              </div>
 
-                <span>
-                    ₹{{ order.totalAmount }}
+            </div>
+
+            <!-- Step dots -->
+            <div class="relative flex justify-between -mt-4">
+              @for (step of ['PLACED', 'PROCESSING', 'SHIPPED', 'DELIVERED']; track step) {
+                <span
+                  [class]="isStepDone(step) || isStepActive(step)
+                    ? 'w-3.5 h-3.5 rounded-full bg-gradient-to-br from-[#D97706] to-[#B45309] ring-4 ring-white shadow-md shadow-[#D97706]/30'
+                    : 'w-3.5 h-3.5 rounded-full bg-[#E7E5E4] ring-4 ring-white'">
                 </span>
-
+              }
             </div>
 
-        </div>
+          </div>
+
+        } @else {
+
+          <!-- Cancelled banner -->
+          <div class="p-6">
+            <div class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-800 p-4 rounded-xl">
+              <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-[#DC2626]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-semibold">This order has been cancelled</p>
+                <p class="text-xs text-red-700 mt-0.5">If you were charged, a refund will be issued within 5–7 business days.</p>
+              </div>
+            </div>
+          </div>
 
         }
 
-    </div>
+
+        <!-- ============ ITEMS ============ -->
+        <div class="p-8">
+
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xs font-semibold text-[#78716C] uppercase tracking-widest">
+              Items in this Order
+            </h2>
+            <span class="inline-flex items-center bg-[#FEF3C7] text-[#B45309] text-xs font-semibold px-2.5 py-1 rounded-full">
+              {{ items.length }} item{{ items.length === 1 ? '' : 's' }}
+            </span>
+          </div>
+
+          <div class="divide-y divide-[#F5F5F4]">
+
+            @for (item of items; track item.id) {
+
+              <div class="flex items-start justify-between py-4 gap-4">
+
+                <div class="flex items-start gap-4 min-w-0">
+
+                  <div class="w-11 h-11 rounded-xl bg-[#FEF3C7] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#B45309]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                  </div>
+
+                  <div class="min-w-0">
+                    <p class="font-semibold text-[#292524] truncate">
+                      {{ item.productName }}
+                    </p>
+                    <p class="text-sm text-[#78716C] mt-0.5">
+                      ₹{{ item.price }} × {{ item.quantity }}
+                    </p>
+                  </div>
+
+                </div>
+
+                <p class="font-bold text-[#292524] shrink-0">
+                  ₹{{ item.price * item.quantity }}
+                </p>
+
+              </div>
+
+            }
+
+          </div>
+
+          <!-- Total -->
+          <div class="mt-6 pt-6 border-t border-dashed border-[#E7E5E4] space-y-2">
+
+            <div class="flex justify-between text-sm">
+              <span class="text-[#78716C]">Subtotal</span>
+              <span class="font-medium text-[#292524]">₹{{ order.totalAmount }}</span>
+            </div>
+
+            <div class="flex justify-between text-sm">
+              <span class="text-[#78716C]">Shipping</span>
+              <span class="font-semibold text-emerald-600">FREE</span>
+            </div>
+
+            <div class="flex justify-between pt-3 mt-3 border-t border-[#F5F5F4]">
+              <span class="text-base font-bold text-[#292524]">Total</span>
+              <span class="text-2xl font-bold text-[#D97706]">₹{{ order.totalAmount }}</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
 
 </div>

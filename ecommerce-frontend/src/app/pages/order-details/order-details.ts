@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
+
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 
@@ -22,6 +28,17 @@ export class OrderDetails implements OnInit {
   loading = true;
   errorMessage = '';
 
+  /**
+   * Numeric rank for each status, used to compute progress.
+   * Higher = further along the fulfillment journey.
+   */
+  private readonly stepOrder: Record<string, number> = {
+    PLACED: 1,
+    PROCESSING: 2,
+    SHIPPED: 3,
+    DELIVERED: 4,
+  };
+
   ngOnInit(): void {
 
     const id = Number(
@@ -43,8 +60,7 @@ export class OrderDetails implements OnInit {
 
         console.error(error);
 
-        this.errorMessage =
-          'Unable to load order.';
+        this.errorMessage = 'Unable to load order.';
 
         this.loading = false;
         this.cdr.markForCheck();
@@ -53,28 +69,50 @@ export class OrderDetails implements OnInit {
     });
   }
 
+  // ---------- Status label ----------
   getStatusText(status: string): string {
 
-  switch (status) {
+    switch (status) {
 
-    case 'PLACED':
-      return 'Order Placed';
+      case 'PLACED':
+        return 'Order Placed';
 
-    case 'PROCESSING':
-      return 'Processing';
+      case 'PROCESSING':
+        return 'Processing';
 
-    case 'SHIPPED':
-      return 'Shipped';
+      case 'SHIPPED':
+        return 'Shipped';
 
-    case 'DELIVERED':
-      return 'Delivered';
+      case 'DELIVERED':
+        return 'Delivered';
 
-    case 'CANCELLED':
-      return 'Cancelled';
+      case 'CANCELLED':
+        return 'Cancelled';
 
-    default:
-      return status;
+      default:
+        return status;
 
+    }
   }
-}
+
+  // ---------- Progress helpers ----------
+  /**
+   * True when this step is the CURRENT step of the order.
+   * Example: order status is SHIPPED → isStepActive('SHIPPED') === true
+   */
+  isStepActive(step: string): boolean {
+    return this.order?.status === step;
+  }
+
+  /**
+   * True when this step has ALREADY been completed.
+   * Example: order status is SHIPPED → isStepDone('PLACED') === true,
+   *          isStepDone('PROCESSING') === true,
+   *          isStepDone('DELIVERED') === false
+   */
+  isStepDone(step: string): boolean {
+    const current = this.stepOrder[this.order?.status] ?? 0;
+    const target = this.stepOrder[step] ?? 0;
+    return current > target;
+  }
 }
