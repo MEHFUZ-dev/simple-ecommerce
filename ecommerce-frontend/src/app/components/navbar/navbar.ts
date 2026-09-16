@@ -5,8 +5,7 @@ import {
   inject
 } from '@angular/core';
 
-import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { CartService } from '../../core/services/cart';
 import { AuthService } from '../../core/services/auth';
@@ -26,23 +25,7 @@ export class Navbar implements OnInit {
 
   mobileOpen = false;
 
-  // 🔽 true only on the homepage (transparent navbar)
-  isHomePage = false;
-
-  constructor() {
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe((e: NavigationEnd) => {
-        const url = e.urlAfterRedirects.split('?')[0].split('#')[0];
-        this.isHomePage = url === '/' || url === '' || url === '/products';
-      });
-  }
-
   ngOnInit(): void {
-    // Set initial state on first load
-    const url = this.router.url.split('?')[0].split('#')[0];
-    this.isHomePage = url === '/' || url === '' || url === '/products';
-
     if (this.authService.isLoggedIn()) {
       this.cartService.refreshCartCount();
     }
