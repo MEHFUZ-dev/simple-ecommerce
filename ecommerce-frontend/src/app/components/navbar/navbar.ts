@@ -5,14 +5,14 @@ import {
   inject
 } from '@angular/core';
 
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { CartService } from '../../core/services/cart';
 import { AuthService } from '../../core/services/auth';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
@@ -23,12 +23,16 @@ export class Navbar implements OnInit {
   private cartService = inject(CartService);
   private cdr = inject(ChangeDetectorRef);
 
+  // 🔽 Used by the mobile hamburger menu
+  mobileOpen = false;
+
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
       this.cartService.refreshCartCount();
     }
   }
 
+  // ---------- Getters ----------
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
@@ -45,13 +49,25 @@ export class Navbar implements OnInit {
     return this.authService.getRole() === 'ADMIN';
   }
 
+  // ---------- Actions ----------
+  toggleMobile(): void {
+    this.mobileOpen = !this.mobileOpen;
+  }
+
+  closeMobile(): void {
+    this.mobileOpen = false;
+  }
+
   logout(): void {
     this.authService.logout();
 
-    // Reset cart
+    // Reset cart count
     this.cartService.cartCount.set(0);
 
-    // Go to products page
+    // Close mobile menu if open
+    this.mobileOpen = false;
+
+    // Navigate to products
     this.router.navigate(['/products']);
 
     // Force navbar to update immediately
