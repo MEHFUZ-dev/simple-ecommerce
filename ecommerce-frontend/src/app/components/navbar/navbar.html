@@ -1,58 +1,183 @@
-<nav class="bg-black text-white px-6 py-4 flex items-center justify-between">
+<nav class="sticky top-0 z-50 bg-[#1C1917]/90 backdrop-blur-lg border-b border-white/10 text-white">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-  <a routerLink="/" class="text-2xl font-bold">
-    ShopEasy
-  </a>
-
-  <div class="flex items-center gap-6">
-
-    <a routerLink="/">
-      Home
+    <!-- Logo -->
+    <a routerLink="/" class="flex items-center gap-2.5 group">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#D97706] to-[#B45309] flex items-center justify-center shadow-lg shadow-[#D97706]/30 group-hover:scale-105 transition-transform">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+      </div>
+      <span class="text-xl font-bold tracking-tight">
+        Shop<span class="bg-gradient-to-r from-[#FCD34D] to-[#D97706] bg-clip-text text-transparent">Easy</span>
+      </span>
     </a>
 
-    <a routerLink="/products">
-      Products
-    </a>
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-1">
 
-    @if (isLoggedIn) {
-
-      <a routerLink="/cart">
-        Cart
-        @if (cartCount > 0) {
-          ({{ cartCount }})
-        }
+      <a routerLink="/"
+         routerLinkActive="text-[#FCD34D] bg-white/5"
+         [routerLinkActiveOptions]="{ exact: true }"
+         class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+        Home
       </a>
 
-      <a routerLink="/orders">
-        My Orders
+      <a routerLink="/products"
+         routerLinkActive="text-[#FCD34D] bg-white/5"
+         class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+        Products
       </a>
 
-      <a routerLink="/profile">
-        Profile
-      </a>
+      @if (isLoggedIn) {
 
-      @if (isAdmin) {
-        <a routerLink="/admin">
-          Admin
+        <!-- Cart -->
+        <a routerLink="/cart"
+           routerLinkActive="text-[#FCD34D] bg-white/5"
+           class="relative px-3.5 py-2 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          Cart
+          @if (cartCount > 0) {
+            <span class="ml-0.5 min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-to-r from-[#D97706] to-[#B45309] text-white text-[11px] font-bold flex items-center justify-center shadow-sm shadow-[#D97706]/40">
+              {{ cartCount }}
+            </span>
+          }
         </a>
+
+        <a routerLink="/orders"
+           routerLinkActive="text-[#FCD34D] bg-white/5"
+           class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+          My Orders
+        </a>
+
+        <a routerLink="/profile"
+           routerLinkActive="text-[#FCD34D] bg-white/5"
+           class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+          Profile
+        </a>
+
+        @if (isAdmin) {
+          <a routerLink="/admin"
+             routerLinkActive="text-[#FCD34D] bg-white/5"
+             class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#FCD34D] animate-pulse"></span>
+            Admin
+          </a>
+        }
+
+        <!-- Divider -->
+        <div class="w-px h-6 bg-white/10 mx-2"></div>
+
+        <button (click)="logout()"
+                class="group px-4 py-2 rounded-lg text-sm font-semibold bg-white/5 border border-white/10 text-[#D6D3D1] hover:text-white hover:bg-[#DC2626]/90 hover:border-[#DC2626] transition-all flex items-center gap-1.5">
+          <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Logout
+        </button>
+
+      } @else {
+
+        <div class="w-px h-6 bg-white/10 mx-2"></div>
+
+        <a routerLink="/login"
+           routerLinkActive="text-[#FCD34D] bg-white/5"
+           class="px-4 py-2 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+          Login
+        </a>
+
+        <a routerLink="/register"
+           class="px-5 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-[#D97706] to-[#B45309] text-white shadow-lg shadow-[#D97706]/30 hover:shadow-xl hover:shadow-[#D97706]/40 hover:-translate-y-0.5 transition-all">
+          Register
+        </a>
+
       }
 
-      <button (click)="logout()">
-        Logout
-      </button>
+    </div>
 
-    } @else {
-
-      <a routerLink="/login">
-        Login
-      </a>
-
-      <a routerLink="/register">
-        Register
-      </a>
-
-    }
+    <!-- Mobile menu button -->
+    <button
+      (click)="mobileOpen = !mobileOpen"
+      class="md:hidden p-2 rounded-lg text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-colors">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        @if (mobileOpen) {
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        } @else {
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        }
+      </svg>
+    </button>
 
   </div>
+
+  <!-- Mobile menu -->
+  @if (mobileOpen) {
+    <div class="md:hidden border-t border-white/10 bg-[#1C1917] px-6 py-4 space-y-1">
+
+      <a routerLink="/" (click)="mobileOpen = false"
+         class="block px-3 py-2.5 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+        Home
+      </a>
+
+      <a routerLink="/products" (click)="mobileOpen = false"
+         class="block px-3 py-2.5 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+        Products
+      </a>
+
+      @if (isLoggedIn) {
+
+        <a routerLink="/cart" (click)="mobileOpen = false"
+           class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+          <span>Cart</span>
+          @if (cartCount > 0) {
+            <span class="min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-to-r from-[#D97706] to-[#B45309] text-white text-[11px] font-bold flex items-center justify-center">
+              {{ cartCount }}
+            </span>
+          }
+        </a>
+
+        <a routerLink="/orders" (click)="mobileOpen = false"
+           class="block px-3 py-2.5 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+          My Orders
+        </a>
+
+        <a routerLink="/profile" (click)="mobileOpen = false"
+           class="block px-3 py-2.5 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+          Profile
+        </a>
+
+        @if (isAdmin) {
+          <a routerLink="/admin" (click)="mobileOpen = false"
+             class="block px-3 py-2.5 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+            Admin
+          </a>
+        }
+
+        <div class="pt-2 mt-2 border-t border-white/10">
+          <button (click)="logout(); mobileOpen = false"
+                  class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-[#DC2626] hover:bg-[#DC2626]/10 transition-all">
+            Logout
+          </button>
+        </div>
+
+      } @else {
+
+        <div class="pt-2 mt-2 border-t border-white/10 space-y-1">
+          <a routerLink="/login" (click)="mobileOpen = false"
+             class="block px-3 py-2.5 rounded-lg text-sm font-medium text-[#D6D3D1] hover:text-white hover:bg-white/5 transition-all">
+            Login
+          </a>
+          <a routerLink="/register" (click)="mobileOpen = false"
+             class="block text-center px-4 py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-r from-[#D97706] to-[#B45309] text-white shadow-lg shadow-[#D97706]/30 transition-all">
+            Register
+          </a>
+        </div>
+
+      }
+
+    </div>
+  }
 
 </nav>
