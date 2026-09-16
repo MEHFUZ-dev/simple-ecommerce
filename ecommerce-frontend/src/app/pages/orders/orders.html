@@ -1,93 +1,195 @@
-<div class="min-h-screen bg-gray-100 p-8">
+<div class="min-h-screen bg-gradient-to-b from-[#FAFAF9] via-[#F5F5F4] to-[#FAFAF9] antialiased">
 
-  <h1 class="text-4xl font-bold mb-8">
-    My Orders
-  </h1>
+  <!-- ============ PAGE HEADER BAND ============ -->
+  <section class="relative overflow-hidden bg-[#1C1917] text-white">
+    <!-- Dark fade behind transparent navbar -->
+    <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#1C1917] via-[#1C1917]/60 to-transparent pointer-events-none"></div>
 
-  @if (loading) {
+    <!-- Decorative amber blobs -->
+    <div class="absolute -top-24 -left-24 w-80 h-80 bg-[#D97706]/25 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-32 -right-24 w-96 h-96 bg-[#F59E0B]/15 rounded-full blur-3xl"></div>
 
-    <p class="text-gray-600">
-      Loading orders...
-    </p>
-
-  } @else if (orders.length === 0) {
-
-    <div class="bg-white rounded-xl p-8 text-center shadow">
-
-      <h2 class="text-2xl font-semibold">
-        No orders yet
-      </h2>
-
-      <p class="text-gray-500 mt-2">
-        Your placed orders will appear here.
+    <div class="relative max-w-4xl mx-auto px-6 pt-32 pb-24 text-center">
+      <p class="text-[#FCD34D] font-semibold text-sm uppercase tracking-widest mb-3">
+        Purchase History
       </p>
-
-      <a
-        routerLink="/products"
-        class="inline-block mt-5 bg-black text-white px-5 py-3 rounded-lg">
-        Browse Products
-      </a>
-
-    </div>
-
-  } @else {
-
-    <div class="space-y-4">
-
-      @for (order of orders; track order.id) {
-
-        <div class="bg-white rounded-xl shadow p-6">
-
-  <div class="flex justify-between items-start">
-
-    <div>
-
-      <h2 class="text-xl font-bold">
-        Order #{{ order.id }}
-      </h2>
-
-      <p class="text-gray-500 mt-1">
-        {{ order.createdAt | date:'medium' }}
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+        My <span class="bg-gradient-to-r from-[#FCD34D] to-[#D97706] bg-clip-text text-transparent">Orders</span>
+      </h1>
+      <p class="text-[#D6D3D1] mt-4 max-w-xl mx-auto">
+        Track your orders and view their details anytime.
       </p>
-
     </div>
+  </section>
 
-    <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">
-      {{ order.status }}
-    </span>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <div class="max-w-4xl mx-auto px-6 -mt-16 relative z-10 pb-20">
+
+    @if (loading) {
+
+      <div class="space-y-4">
+        @for (i of [1,2,3]; track i) {
+          <div class="bg-white rounded-2xl border border-[#E7E5E4] p-6 animate-pulse">
+            <div class="flex justify-between items-start">
+              <div class="space-y-3 flex-1">
+                <div class="h-5 bg-[#F5F5F4] rounded w-1/3"></div>
+                <div class="h-3 bg-[#F5F5F4] rounded w-1/4"></div>
+              </div>
+              <div class="h-7 bg-[#F5F5F4] rounded-full w-20"></div>
+            </div>
+            <div class="flex justify-between items-center mt-5">
+              <div class="space-y-2">
+                <div class="h-3 bg-[#F5F5F4] rounded w-24"></div>
+                <div class="h-6 bg-[#F5F5F4] rounded w-32"></div>
+              </div>
+              <div class="h-10 bg-[#F5F5F4] rounded-lg w-32"></div>
+            </div>
+          </div>
+        }
+      </div>
+
+    } @else if (orders.length === 0) {
+
+      <!-- Empty State -->
+      <div class="bg-white rounded-2xl border border-[#E7E5E4] shadow-xl shadow-black/5 p-14 text-center max-w-lg mx-auto">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-[#FEF3C7] to-[#FDE68A] flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-[#B45309]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-[#292524]">No orders yet</h2>
+        <p class="text-[#78716C] mt-2">Your placed orders will appear here.</p>
+        <a
+          routerLink="/products"
+          class="inline-flex items-center gap-2 mt-7 bg-gradient-to-r from-[#D97706] to-[#B45309] text-white px-7 py-3 rounded-xl font-semibold shadow-lg shadow-[#D97706]/30 hover:shadow-xl hover:shadow-[#D97706]/40 hover:-translate-y-0.5 transition-all">
+          Browse Products
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+
+    } @else {
+
+      <!-- Order count -->
+      <div class="flex items-center justify-between px-1 mb-4">
+        <p class="text-sm text-[#78716C]">
+          <span class="font-semibold text-[#292524]">{{ orders.length }}</span>
+          order{{ orders.length === 1 ? '' : 's' }}
+        </p>
+        <a routerLink="/products" class="text-sm font-medium text-[#D97706] hover:text-[#B45309] transition-colors">
+          + Place new order
+        </a>
+      </div>
+
+      <div class="space-y-4">
+
+        @for (order of orders; track order.id) {
+
+          <div class="group bg-white rounded-2xl border border-[#E7E5E4] hover:border-[#D97706]/40 hover:shadow-xl hover:shadow-[#D97706]/5 transition-all duration-300 overflow-hidden">
+
+            <!-- Top accent strip -->
+            <div class="h-1 bg-gradient-to-r from-[#D97706] via-[#F59E0B] to-[#D97706] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+            <div class="p-6">
+
+              <!-- Header row: order id + status -->
+              <div class="flex justify-between items-start gap-4">
+
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-xl bg-[#FEF3C7] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#B45309]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 class="text-lg font-bold text-[#292524] leading-tight">
+                      Order #{{ order.id }}
+                    </h2>
+                    <p class="text-sm text-[#78716C] mt-0.5 flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                      {{ order.createdAt | date:'medium' }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Status badge (dynamic) -->
+                @switch (order.status) {
+                  @case ('DELIVERED') {
+                    <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-emerald-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Delivered
+                    </span>
+                  }
+                  @case ('SHIPPED') {
+                    <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-blue-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                      Shipped
+                    </span>
+                  }
+                  @case ('PENDING') {
+                    <span class="inline-flex items-center gap-1.5 bg-[#FEF3C7] text-[#B45309] text-xs font-semibold px-3 py-1.5 rounded-full border border-[#FDE68A]">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#D97706] animate-pulse"></span>
+                      Pending
+                    </span>
+                  }
+                  @case ('CANCELLED') {
+                    <span class="inline-flex items-center gap-1.5 bg-red-50 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-red-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                      Cancelled
+                    </span>
+                  }
+                  @default {
+                    <span class="inline-flex items-center gap-1.5 bg-gray-100 text-[#57534E] text-xs font-semibold px-3 py-1.5 rounded-full border border-[#E7E5E4]">
+                      {{ order.status }}
+                    </span>
+                  }
+                }
+
+              </div>
+
+              <!-- Divider -->
+              <div class="border-t border-dashed border-[#E7E5E4] my-5"></div>
+
+              <!-- Footer row: total + CTA -->
+              <div class="flex justify-between items-center gap-4">
+
+                <div>
+                  <p class="text-xs text-[#78716C] uppercase tracking-wider font-medium">
+                    Total Amount
+                  </p>
+                  <p class="text-2xl font-bold text-[#292524] mt-1">
+                    ₹{{ order.totalAmount }}
+                  </p>
+                </div>
+
+                <a
+                  [routerLink]="['/orders', order.id]"
+                  class="group/btn inline-flex items-center gap-2 bg-[#292524] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#D97706] transition-all duration-300">
+                  View Details
+                  <svg class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                  </svg>
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    }
 
   </div>
-
-  <div class="flex justify-between items-center mt-5">
-
-    <div>
-
-      <p class="text-gray-500">
-        Total Amount
-      </p>
-
-      <p class="text-2xl font-bold">
-        ₹{{ order.totalAmount }}
-      </p>
-
-    </div>
-
-    <a
-      [routerLink]="['/orders', order.id]"
-      class="bg-black text-white px-5 py-2 rounded-lg">
-
-      View Details
-
-    </a>
-
-  </div>
-
-</div>
-
-      }
-
-    </div>
-
-  }
 
 </div>
