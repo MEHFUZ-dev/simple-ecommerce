@@ -29,15 +29,14 @@ export class Navbar implements OnInit {
   // 🔽 true only on the homepage (transparent navbar)
   isHomePage = false;
 
-  constructor() {
-    // React to every route change
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        const url = event.urlAfterRedirects.split('?')[0].split('#')[0];
-        this.isHomePage = url === '/' || url === '';
-      });
-  }
+constructor() {
+  this.router.events
+    .pipe(filter(e => e instanceof NavigationEnd))
+    .subscribe((e: NavigationEnd) => {
+      const url = e.urlAfterRedirects.split('?')[0].split('#')[0];
+      this.isHomePage = url === '/' || url === '';
+    });
+}
 
   ngOnInit(): void {
     // Set initial state on first load
