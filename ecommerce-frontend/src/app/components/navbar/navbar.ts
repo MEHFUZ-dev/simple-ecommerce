@@ -5,7 +5,8 @@ import {
   inject
 } from '@angular/core';
 
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 import { CartService } from '../../core/services/cart';
 import { AuthService } from '../../core/services/auth';
@@ -23,54 +24,44 @@ export class Navbar implements OnInit {
   private cartService = inject(CartService);
   private cdr = inject(ChangeDetectorRef);
 
-  // 🔽 Used by the mobile hamburger menu
   mobileOpen = false;
 
+  // 🔽 true only on the homepage (transparent navbar)
+  isHomePage = false;
+
+  constructor() {
+    // React to every route change
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = event.urlAfterRedirects.split('?')[0].split('#')[0];
+        this.isHomePage = url === '/' || url === '';
+      });
+  }
+
   ngOnInit(): void {
+    // Set initial state on first load
+    const url = this.router.url.split('?')[0].split('#')[0];
+    this.isHomePage = url === '/' || url === '';
+
     if (this.authService.isLoggedIn()) {
       this.cartService.refreshCartCount();
     }
   }
 
-  // ---------- Getters ----------
-  get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
-  }
+  get isLoggedIn(): boolean { return this.authService.isLoggedIn(); }
+  get username(): string { return this.authService.getUsername() || ''; }
+  get cartCount(): number { return this.cartService.cartCount(); }
+  get isAdmin(): boolean { return this.authService.getRole() === 'ADMIN'; }
 
-  get username(): string {
-    return this.authService.getUsername() || '';
-  }
-
-  get cartCount(): number {
-    return this.cartService.cartCount();
-  }
-
-  get isAdmin(): boolean {
-    return this.authService.getRole() === 'ADMIN';
-  }
-
-  // ---------- Actions ----------
-  toggleMobile(): void {
-    this.mobileOpen = !this.mobileOpen;
-  }
-
-  closeMobile(): void {
-    this.mobileOpen = false;
-  }
+  toggleMobile(): void { this.mobileOpen = !this.mobileOpen; }
+  closeMobile(): void { this.mobileOpen = false; }
 
   logout(): void {
     this.authService.logout();
-
-    // Reset cart count
     this.cartService.cartCount.set(0);
-
-    // Close mobile menu if open
     this.mobileOpen = false;
-
-    // Navigate to products
     this.router.navigate(['/products']);
-
-    // Force navbar to update immediately
     this.cdr.detectChanges();
   }
 }
