@@ -1,8 +1,8 @@
-<div class="min-h-screen bg-gray-100">
+<div class="min-h-screen bg-[#FAFAF9]">
 
   <!-- Hero -->
 
-  <section class="bg-black text-white">
+  <section class="bg-[#292524] text-white">
 
     <div
       class="max-w-7xl mx-auto px-6 py-20 text-center">
@@ -11,13 +11,13 @@
         Welcome to ShopEasy
       </h1>
 
-      <p class="text-gray-300 text-xl mt-5">
+      <p class="text-[#D6D3D1] text-xl mt-5">
         Simple shopping. Great products.
       </p>
 
-      <a
+      
         routerLink="/products"
-        class="inline-block bg-white text-black px-8 py-3 rounded-lg mt-8 font-semibold">
+        class="inline-block bg-[#D97706] text-white px-8 py-3 rounded-lg mt-8 font-semibold hover:bg-[#B45309] transition-colors">
 
         Shop Now
 
@@ -32,52 +32,52 @@
 
   <section class="max-w-7xl mx-auto px-6 py-12">
 
-    <h2 class="text-3xl font-bold mb-6">
+    <h2 class="text-3xl font-bold mb-6 text-[#292524]">
       Shop by Category
     </h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
-      <a
+      
         routerLink="/products"
         [queryParams]="{ category: 'Electronics' }"
-        class="bg-white rounded-xl shadow p-8 text-center hover:shadow-lg">
+        class="bg-white rounded-xl shadow p-8 text-center border border-[#E7E5E4] hover:shadow-lg hover:border-[#D97706] transition-all">
 
-        <h3 class="text-xl font-bold">
+        <h3 class="text-xl font-bold text-[#292524]">
           Electronics
         </h3>
 
-        <p class="text-gray-500 mt-2">
+        <p class="text-[#78716C] mt-2">
           Discover useful gadgets
         </p>
 
       </a>
 
-      <a
+      
         routerLink="/products"
         [queryParams]="{ category: 'Accessories' }"
-        class="bg-white rounded-xl shadow p-8 text-center hover:shadow-lg">
+        class="bg-white rounded-xl shadow p-8 text-center border border-[#E7E5E4] hover:shadow-lg hover:border-[#D97706] transition-all">
 
-        <h3 class="text-xl font-bold">
+        <h3 class="text-xl font-bold text-[#292524]">
           Accessories
         </h3>
 
-        <p class="text-gray-500 mt-2">
+        <p class="text-[#78716C] mt-2">
           Complete your setup
         </p>
 
       </a>
 
-      <a
+      
         routerLink="/products"
         [queryParams]="{ category: 'Computer' }"
-        class="bg-white rounded-xl shadow p-8 text-center hover:shadow-lg">
+        class="bg-white rounded-xl shadow p-8 text-center border border-[#E7E5E4] hover:shadow-lg hover:border-[#D97706] transition-all">
 
-        <h3 class="text-xl font-bold">
+        <h3 class="text-xl font-bold text-[#292524]">
           Computer
         </h3>
 
-        <p class="text-gray-500 mt-2">
+        <p class="text-[#78716C] mt-2">
           Upgrade your workspace
         </p>
 
@@ -94,13 +94,13 @@
 
     <div class="flex justify-between items-center mb-6">
 
-      <h2 class="text-3xl font-bold">
+      <h2 class="text-3xl font-bold text-[#292524]">
         Featured Products
       </h2>
 
-      <a
+      
         routerLink="/products"
-        class="text-gray-600 hover:text-black">
+        class="text-[#78716C] hover:text-[#D97706] font-medium transition-colors">
 
         View All →
 
@@ -111,13 +111,13 @@
 
     @if (loading) {
 
-      <p class="text-gray-600">
+      <p class="text-[#78716C]">
         Loading products...
       </p>
 
     } @else if (errorMessage) {
 
-      <p class="text-red-600">
+      <p class="text-[#DC2626]">
         {{ errorMessage }}
       </p>
 
@@ -132,57 +132,4 @@
         ) {
 
           <div
-            class="bg-white rounded-xl shadow overflow-hidden">
-
-            <a
-              [routerLink]="[
-                '/products',
-                product.id
-              ]">
-
-              <img
-                [src]="product.imageUrl"
-                [alt]="product.name"
-                class="w-full h-48 object-cover"
-              />
-
-            </a>
-
-            <div class="p-5">
-
-              <p class="text-sm text-gray-500">
-                {{ product.category }}
-              </p>
-
-              <h3 class="text-xl font-bold mt-1">
-                {{ product.name }}
-              </h3>
-
-              <p class="font-bold text-xl mt-4">
-                ₹{{ product.price }}
-              </p>
-
-              <a
-                [routerLink]="[
-                  '/products',
-                  product.id
-                ]"
-                class="block text-center bg-black text-white py-2 rounded-lg mt-4">
-
-                View Product
-
-              </a>
-
-            </div>
-
-          </div>
-
-        }
-
-      </div>
-
-    }
-
-  </section>
-
-</div>
+            class="bg-white rounded-xl shadow overflow-hidden border border-[#E7E5E4] hover:shadow-lg transition-shadow">

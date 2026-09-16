@@ -79,4 +79,20 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    public void resetAdminPassword(String newPassword) {
+
+        User admin = userRepository
+                .findByUsername("admin")
+                .orElseThrow(() ->
+                        new RuntimeException("Admin user not found"));
+
+        admin.setPassword(
+                passwordEncoder.encode(newPassword)
+        );
+
+        admin.setRole("ADMIN");
+
+        userRepository.save(admin);
+    }
+
 }
